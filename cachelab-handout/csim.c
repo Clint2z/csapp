@@ -124,6 +124,7 @@ int readTrace(char *target) {
     if (access_type != 'L'&& access_type != 'M' && access_type != 'S') continue; 
     process(access_type, address, size); 
   }
+  return 0;
 }
 
 int process(char access_type, unsigned long address, int size) {
@@ -131,7 +132,7 @@ int process(char access_type, unsigned long address, int size) {
   int t = 64 - s - b;
   unsigned long tag = address >> (s + b);
   unsigned long setIndex = (address << t) >> (t + b);
-  unsigned long bOffset = (address << (s + t)) >> (s + t); 
+ // unsigned long bOffset = (address << (s + t)) >> (s + t); 
   struct Line *Set = *(Sets + setIndex);
   int index = 0;
   while ((Set + index)->tag != tag && index < E - 1) index++;

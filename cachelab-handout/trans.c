@@ -22,6 +22,81 @@ int is_transpose(int M, int N, int A[N][M], int B[M][N]);
 char transpose_submit_desc[] = "Transpose submission";
 void transpose_submit(int M, int N, int A[N][M], int B[M][N])
 {
+  int i, j, k, a0, a1, a2, a3, a4, a5, a6, a7;
+  int *ptr;
+  if (M == 61 && N == 67){
+    for (i = 0; i < 67; i += 8)
+      for (j = 0; j < 61; j += 8)
+        for (a1 = 0; a1 + j < 61 && a1 < 8; a1++)
+	  for (a0 = 0; a0 + i < 67 && a0 < 8; a0++)
+	    B[a1+j][a0+i] = A[a0 + i][a1+j];
+  }
+
+  if (M == 64 && N == 64) {
+    for (j = 0; j < 64; j += 8)
+      for (i = 0; i < 64; i += 8) {
+        for (k = 0; k < 8; k++) {
+	  ptr = &A[i+k][j];
+	  a0 = ptr[0];
+	  a1 = ptr[1];
+	  a2 = ptr[2];
+	  a3 = ptr[3];
+	  if (k == 0) {
+	    a4 = ptr[4];
+	    a5 = ptr[5];
+	    a6 = ptr[6];
+	    a7 = ptr[7];
+	  }
+	  ptr = &B[j][i+k];
+	  ptr[0] = a0;
+	  ptr[64] = a1;
+	  ptr[128] = a2;
+	  ptr[192] = a3;
+	}
+	for (k = 7; k > 0; k--) {
+	  ptr = &A[i+k][j+4];
+	  a0 = ptr[0];
+	  a1 = ptr[1];
+	  a2 = ptr[2];
+	  a3 = ptr[3];
+	  ptr = &B[j+4][i+k];
+	  ptr[0] = a0;
+	  ptr[64] = a1;
+	  ptr[128] = a2;
+	  ptr[192] = a3;
+	}
+	ptr = &B[j+4][i];
+	ptr[0] = a4;
+	ptr[64] = a5;
+	ptr[128] = a6;
+	ptr[192] = a7;
+      }
+  }
+
+  if (M == 32 && N == 32){
+    for (i = 0; i < 32; i+=8)
+      for (j = 0; j < 32; j+=8)
+        for (k = 0; k < 8; k++) {
+	  ptr = &A[i+k][j];
+	  a0 = ptr[0];
+	  a1 = ptr[1];
+	  a2 = ptr[2];
+	  a3 = ptr[3];
+	  a4 = ptr[4];
+	  a5 = ptr[5];
+	  a6 = ptr[6];
+	  a7 = ptr[7];
+	  ptr = &B[j][i+k];
+	  ptr[0] = a0;
+	  ptr[32] = a1;
+	  ptr[64] = a2;
+	  ptr[96] = a3;
+	  ptr[128] = a4;
+	  ptr[160] = a5;
+	  ptr[192] = a6;
+	  ptr[224] = a7;
+	}
+  }
 }
 
 /* 
